@@ -26,10 +26,9 @@ RUN npm run build
 # ============================
 FROM python:3.11-slim-bullseye AS final
 
-# Set working directory for backend
 WORKDIR /app
 
-# (Optional) Install system dependencies for Python packages
+# (Optional) Install system dependencies for Python packages (uncomment if needed)
 # RUN apt-get update && apt-get install -y --no-install-recommends \
 #     build-essential libffi-dev libssl-dev \
 #     && rm -rf /var/lib/apt/lists/*
@@ -44,12 +43,11 @@ COPY BTCTX/backend/ ./backend/
 # Copy built frontend from Stage 1 into backend
 COPY --from=build-frontend /app/frontend/dist ./frontend/dist
 
-# Expose the FastAPI port
+# Ensure /data directory exists for SQLite database storage
+RUN mkdir -p /data && chmod 777 /data
+
+# Expose FastAPI port
 EXPOSE 8000
 
-# Set environment variables (optional, if you use them)
-ENV UVICORN_HOST=0.0.0.0
-ENV UVICORN_PORT=8000
-
-# Run FastAPI with Uvicorn
-CMD ["uvicorn", "backend.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# **Ensure the database schema is created before launching FastAPI**
+CMD ["sh", "-c", "python3 backend/create_db.py && uvicorn backend.main:app --host 0.0.0.0 --port 8000"]

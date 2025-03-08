@@ -21,8 +21,9 @@ import { setupExposeStore } from '@start9labs/start-sdk'
  * ```
  */
 export type Store = {
-  secretPhrase: string
-  nameLastUpdatedAt: string | null
+  secretPhrase: string // Placeholder for future admin credentials
+  adminPassword: string // Placeholder for a default password system
+  nameLastUpdatedAt: string | null // Example timestamp storage
 }
 
 export const exposedStore = setupExposeStore<Store>((pathBuilder) => [

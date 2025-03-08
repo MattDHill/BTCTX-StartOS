@@ -1,6 +1,5 @@
 import { sdk } from '../sdk'
 import { yamlFile } from '../file-models/config.yml'
-import { getSecretPhrase } from '../utils'
 
 const { InputSpec, Value } = sdk
 
@@ -8,9 +7,9 @@ export const inputSpec = InputSpec.of({
   name: Value.text({
     name: 'Name',
     description:
-      'When you launch the Hello World UI, it will display "Hello [Name]"',
+      'When you launch the BitcoinTX UI, it will display "Welcome, [Name]"',
     required: true,
-    default: 'World',
+    default: 'User',
   }),
 })
 
@@ -21,7 +20,7 @@ export const setName = sdk.Action.withInput(
   // metadata
   async ({ effects }) => ({
     name: 'Set Name',
-    description: 'Set your name so Hello World can say hello to you',
+    description: 'Set your display name for BitcoinTX',
     warning: null,
     allowedStatuses: 'any',
     group: null,
@@ -44,12 +43,7 @@ export const setName = sdk.Action.withInput(
       yamlFile.merge(input),
       sdk.store.setOwn(
         effects,
-        sdk.StorePath.secretPhrase,
-        getSecretPhrase(input.name),
-      ),
-      sdk.store.setOwn(
-        effects,
-        sdk.StorePath.nameLastUpdatedAt,
+        sdk.StorePath.nameLastUpdatedAt, // ✅ FIXED: Use this instead of `from`
         new Date().toISOString(),
       ),
     ])
