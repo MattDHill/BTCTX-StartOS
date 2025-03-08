@@ -1,30 +1,24 @@
 import { sdk } from './sdk'
-import { exposedStore } from './store'
+import { versions } from './versions'
 import { setDependencies } from './dependencies'
 import { setInterfaces } from './interfaces'
-import { versions } from './versions'
 import { actions } from './actions'
-import { getSecretPhrase } from './utils'
-import { yamlFile } from './file-models/config.yml'
+import { exposedStore } from './store'
 
 // **** Install ****
 const install = sdk.setupInstall(async ({ effects }) => {
-  const name = 'World'
-
-  await yamlFile.write({ name })
-
-  await sdk.store.setOwn(
-    effects,
-    sdk.StorePath.secretPhrase,
-    getSecretPhrase(name),
-  )
+  // No special logic for now
+  console.info('Installing BTCTX...')
 })
 
 // **** Uninstall ****
-const uninstall = sdk.setupUninstall(async ({ effects }) => {})
+const uninstall = sdk.setupUninstall(async ({ effects }) => {
+  // No special logic for now
+  console.info('Uninstalling BTCTX...')
+})
 
 /**
- * Plumbing. DO NOT EDIT.
+ * ============== Plumbing. DO NOT EDIT. ==============
  */
 export const { packageInit, packageUninit, containerInit } = sdk.setupInit(
   versions,

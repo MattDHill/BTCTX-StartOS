@@ -7,9 +7,9 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
     protocol: 'http',
   })
   const ui = sdk.createInterface(effects, {
-    name: 'Web UI',
+    name: 'BTCTX UI',
     id: 'ui',
-    description: 'The web interface of Hello World',
+    description: 'The web interface of BitcoinTX',
     type: 'ui',
     masked: false,
     schemeOverride: null,

@@ -3,39 +3,28 @@ import { T } from '@start9labs/start-sdk'
 import { uiPort } from './utils'
 
 export const main = sdk.setupMain(async ({ effects, started }) => {
-  /**
-   * ======================== Setup (optional) ========================
-   *
-   * In this section, we fetch any resources or run any desired preliminary commands.
-   */
-  console.info('Starting Hello World!')
+  console.info('Starting BitcoinTX')
 
-  /**
-   * ======================== Additional Health Checks (optional) ========================
-   *
-   * In this section, we define *additional* health checks beyond those included with each daemon (below).
-   */
+  // Additional health checks can be appended here
   const healthReceipts: T.HealthReceipt[] = []
 
-  /**
-   * ======================== Daemons ========================
-   *
-   * In this section, we create one or more daemons that define the service runtime.
-   *
-   * Each daemon defines its own health check, which can optionally be exposed to the user.
-   */
+  // Create a single daemon named 'primary'
   return sdk.Daemons.of(effects, started, healthReceipts).addDaemon('primary', {
-    subcontainer: { imageId: 'hello-world' },
-    command: ['hello-world'],
+    subcontainer: { imageId: 'main' },
+    command: ['uvicorn', 'backend.main:app', '--host', '0.0.0.0', '--port', '8000'],
     mounts: sdk.Mounts.of().addVolume('main', null, '/data', false),
+
+    // Define a readiness check to see if port 8000 is listening
     ready: {
-      display: 'Web Interface',
+      display: 'BTCTX Web Interface',
       fn: () =>
         sdk.healthCheck.checkPortListening(effects, uiPort, {
-          successMessage: 'The web interface is ready',
-          errorMessage: 'The web interface is not ready',
+          successMessage: 'BTCTX web interface is ready',
+          errorMessage: 'BTCTX web interface is not responding',
         }),
     },
+
+    // If this daemon depends on other services, list them here
     requires: [],
   })
 })
