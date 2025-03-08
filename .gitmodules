@@ -1,0 +1,3 @@
+[submodule "BTCTX"]
+	path = BTCTX
+	url = https://github.com/PlebRick/BTCTX.git
